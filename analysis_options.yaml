@@ -3,3 +3,6 @@ include: package:flutter_lints/flutter.yaml
 linter:
   rules:
     use_key_in_widget_constructors: false
+    avoid_print: false
+    prefer_if_null_operators: false
+    prefer_const_constructors: false

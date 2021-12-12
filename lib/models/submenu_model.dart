@@ -2,13 +2,13 @@ import 'package:sambapos_menu/models/item_model.dart';
 
 class SubMenu {
   SubMenu({
-    required this.key,
+    this.key,
     this.description,
     this.orderTag,
     this.items,
   });
 
-  String key;
+  String? key;
   String? description;
   String? orderTag;
   List<Item>? items;

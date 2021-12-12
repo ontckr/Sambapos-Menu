@@ -36,3 +36,24 @@ içinde subMenus olmayan ürünler olursa o sadece seçilecek herhangi bir işle
 Bütün bu akışın yapılmasının sağlanması, resimleri gösterilmesi sağlanacak
 
 
+
+1. etli menu 
+2. tavuklu menu 
+  -1 tavuk yemegi
+     1. tavuk 
+    2. tavuk 
+  -2 icecek
+    1.kola
+    2. ayran 
+  -3 tatli
+
+
+
+tavuk yemekleri : 
+ 1. tavuk 
+ 2. tavuk 
+
+
+icecek: 
+ 1.kola
+ 2. ayran 
