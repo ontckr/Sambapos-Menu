@@ -1,18 +1,27 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sambapos_menu/models/item_model.dart';
+import 'package:sambapos_menu/models/menu_model.dart';
 import 'package:sambapos_menu/models/yaml_model.dart';
 import 'package:yaml/yaml.dart';
 
 class MenuProvider extends ChangeNotifier {
+  late YamlModel yamlModel;
   bool loading = false;
+
   List<Item> menuItems = [];
   Item discountMenuItems = Item();
-
   List<Item> basket = [];
+  double basketPrice = 0;
+
+  List<Menu> subMenu = [];
+  Map<String, Item> selectedSubMenuItems = {};
+
+  double basePrice = 0;
+  double updatedBasePrice = 0;
+
+  late Item selectedSubMenu;
 
   Future getMenus() async {
     loading = true;
@@ -21,32 +30,59 @@ class MenuProvider extends ChangeNotifier {
     // print(json.encode(yamlData));
     final jsonData = json.decode(json.encode(yamlData));
     // print(jsonData.runtimeType);
-
-    YamlModel yamlModel = YamlModel.fromJson(jsonData);
+    yamlModel = YamlModel.fromJson(jsonData);
     // print(yamlModel.menus);
-
-    sleep(Duration(seconds: 1));
+    await Future.delayed(Duration(seconds: 1));
 
     menuItems = yamlModel.menus!.first.items!;
     discountMenuItems = yamlModel.menus!.first.items!.first;
 
     menuItems.removeAt(0);
-
     loading = false;
-    // print(menuItems);
-
     notifyListeners();
   }
 
   addToBasket(Item item) {
     basket.add(item);
+    basketPrice += item.price ?? 0;
     notifyListeners();
-    print(basket);
   }
 
-  removeFromBasket(Item item) {
-    basket.remove(item);
+  List<Menu> getSubMenu(List<String> subMenuKeys) {
+    subMenu = [];
+    for (var menuKey in subMenuKeys) {
+      var key = yamlModel.menus!.firstWhere((element) => element.key == menuKey);
+      subMenu.add(key);
+    }
+    return subMenu;
+  }
+
+  addToSelection(String subMenuKey, Item item) {
+    selectedSubMenuItems[subMenuKey] = item;
+    updatedBasePrice = basePrice;
+    selectedSubMenuItems.forEach((k, v) {
+      updatedBasePrice += v.price ?? 0;
+    });
     notifyListeners();
-    print(basket);
+  }
+
+  selectMenu(Item item) {
+    selectedSubMenu = item;
+    basePrice = item.price ?? 0;
+    updatedBasePrice = basePrice;
+    selectedSubMenuItems = {};
+    notifyListeners();
+  }
+
+  bool addSelectionsToBasket() {
+    if (selectedSubMenu.subMenus!.length != selectedSubMenuItems.keys.length) {
+      return false;
+    }
+    selectedSubMenuItems.forEach((k, v) {
+      basket.add(v);
+    });
+    basketPrice += updatedBasePrice;
+    notifyListeners();
+    return true;
   }
 }
