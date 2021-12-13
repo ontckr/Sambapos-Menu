@@ -10,7 +10,7 @@ class Item {
 
   String? name;
   String? caption;
-  dynamic price;
+  double? price;
   List<String>? subMenus;
   String? image;
   List<Item>? items;
@@ -18,7 +18,11 @@ class Item {
   factory Item.fromJson(Map<String, dynamic> json) => Item(
         name: json["name"],
         caption: json["caption"] == null ? null : json["caption"],
-        price: json["price"] == null ? null : json["price"],
+        price: json["price"] == null
+            ? null
+            : json["price"].runtimeType == int
+                ? json["price"].toDouble()
+                : double.parse(json["price"].replaceAll(',', '.')),
         subMenus: json["subMenus"] == null ? null : List<String>.from(json["subMenus"].map((x) => x)),
         image: json["image"],
         items: json["items"] == null ? null : List<Item>.from(json["items"].map((x) => Item.fromJson(x))),
