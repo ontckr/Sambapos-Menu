@@ -14,7 +14,6 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
     Provider.of<MenuProvider>(context, listen: false).getMenus();
   }
 
@@ -25,12 +24,14 @@ class _SplashScreenState extends State<SplashScreen> {
     return !_menuProvider.loading
         ? MenuPage()
         : Scaffold(
-            body: Center(
-              child: Container(
+            body: Container(
+              constraints: BoxConstraints.expand(),
+              color: Colors.orange,
+              child: Center(
+                  child: Image.network(
+                "https://sambapos.com/wp-content/uploads/2016/10/logo.png",
                 height: 200,
-                color: Colors.orange,
-                child: Image.network("https://sambapos.com/wp-content/uploads/2016/10/logo.png"),
-              ),
+              )),
             ),
           );
   }
